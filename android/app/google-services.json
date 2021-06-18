@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "701373275716",
+    "project_id": "chatapp-26138",
+    "storage_bucket": "chatapp-26138.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:701373275716:android:5d7be12d18b57bd2e72611",
+        "android_client_info": {
+          "package_name": "com.kashish.flatchat"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "701373275716-pg4qlbf8m2o93gmcsl2u23go0m6g11ul.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.kashish.flatchat",
+            "certificate_hash": "5e92a7cb92ee6c1dff9de66bd61b4b050e6fca11"
+          }
+        },
+        {
+          "client_id": "701373275716-5mms9u2rv6511ikai9nudjfe0ud5ert3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCD03qFiwyUmytmqlsIUkayNv5eLZRjQSo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "701373275716-5mms9u2rv6511ikai9nudjfe0ud5ert3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

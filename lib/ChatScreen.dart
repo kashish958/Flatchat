@@ -41,21 +41,6 @@ Stream   chatMessagesStream;
     chatRoomId=val;
 
 
-    d.getConversationMessages(chatRoomId).then((value) async{
-     // setState(() {
-        chatMessagesStream = value;
-
-     // });
-
-        print(chatRoomId);
-       // print("jbvsdh");
-
-     // print(chatMessagesStream);
-     await   showlastmsg();
-
-    });
-
-
 
   }
 
@@ -79,8 +64,8 @@ Stream   chatMessagesStream;
                         ListTile(
                           leading: CircleAvatar(
 
-                            foregroundColor:Color(0xff075E54),
-                            backgroundColor:Colors.grey ,
+                            // foregroundColor:Color(0xff075E54),
+                            // backgroundColor:Colors.grey ,
                             backgroundImage: NetworkImage(
                                snapshot.data.docs[index]["URL"],
                                 //fit: BoxFit.fitWidth,
@@ -89,11 +74,8 @@ Stream   chatMessagesStream;
                               )
 
                           ),
-                          title: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children:<Widget>[
-
-                                TextButton(onPressed: (){
+                          title:
+                           TextButton(onPressed: (){
                                   setState(() {
                                     Searchstate().createchatroomandtalk(context,
                                         userName: snapshot.data.docs[index]["field1"]
@@ -101,13 +83,14 @@ Stream   chatMessagesStream;
                                   });
                                 }, child: Text(snapshot.data.docs[index]["field1"] ,
                                   style: TextStyle(fontWeight: FontWeight.bold  ,color: Colors.black,fontSize: 18) ,  ) ),
-                                Text("04:30" ,style : TextStyle(color:Colors.grey,fontSize: 14)),
-
-
-
-                    ]
-                          ),
-                          subtitle: Text("heyy no msg since..",style:TextStyle(color:Colors.grey,fontSize: 15) ,),
+                              //  Text("04:30" ,style : TextStyle(color:Colors.grey,fontSize: 14)),
+                          subtitle:StreamBuilder(
+                    stream: FirebaseFirestore.instance.collection("ChatRoom").snapshots(),
+                    builder: (context, snapshot) {
+                      print(snapshot.data.docs[index]["lastmsg"].toString());
+                      return Text(snapshot.data.docs[index]["lastmsg"].toString());
+                    }
+                          ) ,
                         ),
 
 
@@ -115,52 +98,7 @@ Stream   chatMessagesStream;
                       ],
                     ) ;
 
-                    // Text(snapshot.data.docs[index]["chatroomid"].toString());
 
-//                         Card(
-//                           elevation: 10,
-//                           margin: EdgeInsets.symmetric(vertical: 5, ),
-//
-//                           child: ExpansionTile(
-//
-//                           //  child : SizedBox(height: 20,),
-//                               title : Text(snapshot.data.docs[index]["field1"]),
-//
-//                             leading:
-//                                Image.network(
-//                                snapshot.data.docs[index]["URL"],
-//                                 fit: BoxFit.fitWidth,
-// height: 70,
-//                                 width: 50,
-//                               ),
-//
-//                          // leading :Text(snapshot.data.docs[index]["field2"]),
-//
-// //                             children : [
-// //
-// //
-// //                                           RaisedButton(
-// //                                             onPressed:() {
-// // setState(() {
-// //   Searchstate().createchatroomandtalk( context,
-// //       userName:snapshot.data.docs[index]["field1"]
-// //   );
-// // }
-// // );
-// //
-// //
-// //                                             },
-// //                                             child: Icon(Icons.message),
-// //                                           ),
-// //
-// //                             ]
-//                           ),
-//
-//
-//
-//
-//
-//                         );
                   })
               : CircularProgressIndicator();
         });
@@ -171,29 +109,7 @@ Stream   chatMessagesStream;
  //   print(chatMessagesStream.length);
 
 
-      StreamBuilder(
 
-      stream: chatMessagesStream,
-      builder: (context, snapshot) {
-        print("dekho");
-        print(snapshot.data);
-        return snapshot.hasData
-            ? ListView.builder(
-            itemCount: snapshot.data.docs.length,
-            itemBuilder: (context, index) {
-            print(snapshot.data.docs[index]["message"]);
-           // return Text(snapshot.data.docs[0]["message"]);
-             // return Text(
-               //   snapshot.data.docs[index]["message"],);
-                  //snapshot.data.docs[index]["sendby"] == Constants.myName,
-                 // snapshot.data.docs[index]["time"]);
-            })
-            :
-        Container(
-          child: Text("noodata"),
-        );
-      },
-    );
   }
 
   @override

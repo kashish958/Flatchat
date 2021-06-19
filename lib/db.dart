@@ -49,6 +49,13 @@ getuserbyemail(String email) async{
 //     "chatroomid": chatRoomId,
 //     })
 
+  // Future<void> updatelastmsgtime(String chatRoomId,Map<String,dynamic>data)
+  // {
+  //   FirebaseFirestore.instance.collection("Users").doc(chatRoomId).update(data).catchError((onError){
+  //     print(onError.toString);
+  //   });
+  // }
+
 Future<void>  createChatRoom(String chatRoomId ,Map<String,dynamic> chatRoomMap ){
     FirebaseFirestore.instance.collection("ChatRoom").doc(chatRoomId).set(chatRoomMap).catchError((onError){
       print(onError.toString);
@@ -93,6 +100,8 @@ Future<void>  createChatRoom(String chatRoomId ,Map<String,dynamic> chatRoomMap 
 
 
 
+
+
 //TaskSnapshot taskSnapshot = await uploadTask.onComplete;
 
 
@@ -125,14 +134,14 @@ return await FirebaseFirestore.instance.collection("ChatRoom").doc(chatRoomId).c
   // }
 
 
-Future creategroup (String groupid,Map<String,dynamic>groupMap)
+Future<void> creategroup (String groupid,Map<String,dynamic>groupMap) async
 {
     FirebaseFirestore.instance.collection("GroupRoom").doc(groupid)
         .set(groupMap)
         .catchError((onError){
       print(onError.toString());
     });
-    return null;
+
 }
 
 

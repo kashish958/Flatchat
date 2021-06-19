@@ -40,49 +40,7 @@ class GcState extends State<Gc> {
                     return // Text(snapshot.data.docs[index]["chatroomid"].toString());
 
 //
-//                       Column(
-//                         children: [
-//                         Divider(
-//                         height: 10,
-//                     ),
-//                     ListTile(
 //
-//
-//                     leading: CircleAvatar(
-//
-//                     foregroundColor:Color(0xff075E54),
-//                     backgroundColor:Colors.grey ,
-//                     backgroundImage: NetworkImage(
-//
-//                     "https://image.shutterstock.com/image-photo/photo-happy-group-friends-sitting-260nw-1071557390.jpg"
-//                     // snapshot.data.docs[index]["URL"],
-//                     //fit: BoxFit.fitWidth,
-// //height: 70,
-//                     //width: 50,
-//                     )
-//
-//                     ),
-//
-//                     title :  Row(
-//                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                     children: [
-//                     TextButton(onPressed: (){
-//
-//                     Navigator.pushReplacement(context,
-//                     MaterialPageRoute(builder: (context) => Groupkibaat(snapshot.data.docs[index]["grouproomid"])));
-//
-//                     }, child: Text(snapshot.data.docs[index]["grouproomid"] ,
-//                     style: TextStyle(fontWeight: FontWeight.bold  ,color: Colors.black,fontSize: 18) ,  ) ),
-//                     ],
-//                     ),
-//
-//                     ),
-//
-//
-//
-//                     ],
-
-
 
 
                     Column(
@@ -191,16 +149,24 @@ class GcState extends State<Gc> {
     if (userName == Constants.myName) {
       String groupRoomId =
           widget.gname; //getChatRoomId(userName, Constants.myName);
-      List<String> users = temp;
+     // List<String> users = temp;
       Map<String, dynamic> groupRoomMap = {
-        "users ": users, //
+        "users": FieldValue.arrayUnion(temp),
         "grouproomid": groupRoomId,
         "URL" :iurl
+
       };
       print("ayaya");
-     await d.creategroup(groupRoomId, groupRoomMap);
-          Navigator.pushReplacement(context,
-              MaterialPageRoute(builder: (context) => Groupkibaat(groupRoomId)));
+
+  await   d.creategroup(groupRoomId, groupRoomMap);
+      print("vdvvfdv");
+
+
+
+    //   Navigator.push(context,
+      //     MaterialPageRoute(builder: (context) => Groupkibaat(groupRoomId,users)));
+
+
 
       // Navigator.push(context, MaterialPageRoute(builder: (context) => Conversation(chatRoomId,userName)
       //  ));
@@ -209,6 +175,9 @@ class GcState extends State<Gc> {
     }
   }
 
+  // getlist ()async{
+  //   return  await temp;
+  // }
 //
 // sendgrMessage() {
 //   if(messagecontroller.text.isNotEmpty)
@@ -276,6 +245,13 @@ addimg(imgfile).then((value) {
 
 
   }
+
+  void initState(){
+    // initiateSearch();
+
+    super.initState();
+  }
+
 
   @override
   Widget build(BuildContext context) {

@@ -69,12 +69,12 @@ Widget showgList(){
 
                                   //  print(FirebaseFirestore.instance.collection("GroupRoom").doc(snapshot.data.docs[index]["grouproomid"]).get().toString());
 
-                                  //  print(snapshot.data.docs[index]);
+                                  print(snapshot.data.docs[index]["users"]);
                                //user=
                                     // print(snapshot.data.docs[index]["grouproomid"]);
                               // print(user);
                                     Navigator.pushReplacement(context,
-                                        MaterialPageRoute(builder: (context) => Groupkibaat(snapshot.data.docs[index]["grouproomid"])));
+                                        MaterialPageRoute(builder: (context) => Groupkibaat(snapshot.data.docs[index]["grouproomid"],snapshot.data.docs[index]["users"])));
 
                                   }, child: Text(snapshot.data.docs[index]["grouproomid"] ,
                                     style: TextStyle(fontWeight: FontWeight.bold  ,color: Colors.black,fontSize: 18) ,  ) ),

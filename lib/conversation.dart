@@ -25,7 +25,7 @@ class Conversation extends StatefulWidget {
 class Conversationstate extends State<Conversation> {
   DB d = new DB();
   //QuerySnapshot snapshot;
-  TextEditingController messagecontroller = new TextEditingController();
+  TextEditingController messagecontroller =  TextEditingController();
   File imgfile;
   final picker = ImagePicker();
   var iurl;
@@ -43,8 +43,8 @@ class Conversationstate extends State<Conversation> {
 
       stream: chatMessagesStream,
       builder: (context, snapshot) {
-       print("fvf");
-        print(snapshot.data);
+     //  print("fvf");
+       // print(snapshot.data);
         return snapshot.hasData
             ? ListView.builder(
                 itemCount: snapshot.data.docs.length,
@@ -157,7 +157,7 @@ class Conversationstate extends State<Conversation> {
       Map<String, dynamic> imgMap = {
         "imgurl": ii,
         "sendby": Constants.myName,
-        "time": DateTime.now().toString()
+        "time": DateTime.now()
       };
       d.addingimage(widget.chatRoomId, imgMap);
     }
@@ -168,12 +168,32 @@ class Conversationstate extends State<Conversation> {
       Map<String, dynamic> messageMap = {
         "message": messagecontroller.text,
         "sendby": Constants.myName,
-        "time": DateTime.now().toString()
+        "time": DateTime.now()
       };
       d.addConversationMessages(widget.chatRoomId, messageMap);
       messagecontroller.clear();
     }
   }
+  // getlast() {
+  //   print("fetchiii");
+  //
+  //     Map<String, dynamic> lastdata = {
+  //       "lastmsg": messagecontroller.text,
+  //       "lasttime": DateTime.now()
+  //     };
+  //     d.updatelastmsgtime(widget.chatRoomId, lastdata);
+  //  //  messagecontroller.clear();
+  //
+  // }
+
+
+
+
+
+
+
+
+
 
   _displayDialog(BuildContext context) async {
     return showDialog(
@@ -383,6 +403,13 @@ class Conversationstate extends State<Conversation> {
                             print("press");
 
                             sendMessage();
+                          //  getlast();
+                            print("isshbot");
+                            FirebaseFirestore.instance.collection('ChatRoom').doc(widget.chatRoomId).update({
+                              'lastmsg': messagecontroller.text,
+                              "lasttime": DateTime.now(),
+                              // "name": widget.name,
+                            });
                             hh = false;
                           },
                           child: Container(
@@ -410,7 +437,7 @@ class Conversationstate extends State<Conversation> {
 class MessageTile extends StatelessWidget {
   final String message;
   final bool isSendByMe;
-  final String time;
+  final Timestamp time;
   MessageTile(this.message, this.isSendByMe, this.time);
   @override
   Widget build(BuildContext context) {
@@ -437,7 +464,7 @@ class MessageTile extends StatelessWidget {
                       topRight: Radius.circular(23),
                       bottomLeft: Radius.circular(23))),
           child: Column(
-            children: [Text(message), Text(time)],
+            children: [Text(message), Text("${time.toDate().hour} :"  "${time.toDate().minute }")],
           )),
     );
   }

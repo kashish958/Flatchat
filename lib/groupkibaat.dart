@@ -18,14 +18,14 @@ import 'gc.dart';
 
 class Groupkibaat extends StatefulWidget {
   final String chatRoomId ;
-  //.final List users;
-  Groupkibaat(this.chatRoomId);
+  final List users;
+  Groupkibaat(this.chatRoomId,this.users);
 
   @override
-  _GroupkibaatState createState() => _GroupkibaatState();
+  GroupkibaatState createState() => GroupkibaatState();
 }
 
-class _GroupkibaatState extends State<Groupkibaat> {
+class GroupkibaatState extends State<Groupkibaat> {
   DB d = new DB();
   //QuerySnapshot snapshot;
   TextEditingController messagecontroller = new TextEditingController();
@@ -52,102 +52,7 @@ class _GroupkibaatState extends State<Groupkibaat> {
     );
   }
 
-  // @override
-  // Widget ChatimageList() {
-  //   return StreamBuilder(
-  //       stream: imgstream,
-  //       builder: (context, snapshot) {
-  //         if (snapshot.hasData) {
-  //           return ListView.builder(
-  //               itemCount: snapshot.data.docs.length,
-  //               itemBuilder: (context, index) {
-  //                 return Container(
-  //                   padding: EdgeInsets.only(
-  //                       left: snapshot.data.docs[index]["sendby"] ==
-  //                               Constants.myName
-  //                           ? 0
-  //                           : 24,
-  //                       right: snapshot.data.docs[index]["sendby"] ==
-  //                               Constants.myName
-  //                           ? 24
-  //                           : 0),
-  //                   margin: EdgeInsets.symmetric(vertical: 8),
-  //                   width: MediaQuery.of(context).size.width,
-  //                   alignment:
-  //                       snapshot.data.docs[index]["sendby"] == Constants.myName
-  //                           ? Alignment.centerRight
-  //                           : Alignment.centerLeft,
-  //                   child: Container(
-  //                     padding:
-  //                         EdgeInsets.symmetric(horizontal: 24, vertical: 8),
-  //                     decoration: BoxDecoration(
-  //                         gradient: LinearGradient(
-  //                             colors: snapshot.data.docs[index]["sendby"] ==
-  //                                     Constants.myName
-  //                                 ? [Colors.yellow, Colors.pinkAccent]
-  //                                 : [Colors.blue, Colors.blueAccent]),
-  //                         borderRadius: snapshot.data.docs[index]["sendby"] ==
-  //                                 Constants.myName
-  //                             ? BorderRadius.only(
-  //                                 topLeft: Radius.circular(23),
-  //                                 topRight: Radius.circular(23),
-  //                                 bottomLeft: Radius.circular(23))
-  //                             : BorderRadius.only(
-  //                                 topLeft: Radius.circular(23),
-  //                                 topRight: Radius.circular(23),
-  //                                 bottomLeft: Radius.circular(23))),
-  //                     child: Image.network(
-  //                       snapshot.data.docs[index]["imgurl"],
-  //                       height: 110,
-  //                     ),
-  //                   ),
-  //                 );
-  //
-  //                 //Container(height : 50,width: 40 ,child: Image.network(snapshot.data.docs[index]["imgurl"]));//Image.network(iurl);
-  //                 // ;//Tile(snapshot.data.docs[index]["message"],
-  //               });
-  //         }
-  //       });
-  // }
-
-  // @override
-  // Future addimg(File pickedimg) async {
-  //   String fileName = basename(pickedimg.path);
-  //   Reference firebaseStorageRef =
-  //       FirebaseStorage.instance.ref().child('uploads/$fileName');
-  //   UploadTask uploadTask = firebaseStorageRef.putFile(pickedimg);
-  //   TaskSnapshot taskSnapshot = await (await uploadTask);
-  //   await taskSnapshot.ref.getDownloadURL().then((value) {
-  //     print("Done" + value);
-  //     iurl = value;
-  //   });
-  //
-  //   return iurl;
-  // }
-  //
-  // @override
-  // Future chooseimg(ImageSource source) async {
-  //   final pickedimage = await picker.getImage(source: source);
-  //
-  //   setState(() {
-  //     imgfile = File(pickedimage.path);
-  //     print(imgfile.path);
-  //   });
-  // }
-
-  // sendimg(String ii) {
-  //   print(ii);
-  //   if (imgfile != null) {
-  //     Map<String, dynamic> imgMap = {
-  //       "imgurl": ii,
-  //       "sendby": Constants.myName,
-  //       "time": DateTime.now().microsecondsSinceEpoch
-  //     };
-  //     d.addingimage(widget.chatRoomId, imgMap);
-  //   }
-  // }
-
-  sendMessage() {
+   sendMessage() {
     if (messagecontroller.text.isNotEmpty) {
       Map<String, dynamic> messageMap = {
         "message": messagecontroller.text,
@@ -198,21 +103,23 @@ class _GroupkibaatState extends State<Groupkibaat> {
   //         );
   //       });
   // }
+  List li=[] ;
 
   @override
   void initState() {
+
+    // GcState().getlist().then((val){
+    //   li=val;
+    //   print("huh");
+    // });
+    // print(li);
+
     d.getgroupmsg(widget.chatRoomId).then((value) {
       setState(() {
         chatMessagesStream = value;
       });
     });
 
-    // d.getimgMessages(widget.chatRoomId).then((value) {
-    //   setState(() {
-    //     imgstream = value;
-    //     print(imgstream);
-    //   });
-    // });
 
 
 
@@ -220,37 +127,25 @@ class _GroupkibaatState extends State<Groupkibaat> {
   }
 
 
-
-
-  // DropdownButton(
-  // icon: Icon(
-  // Icons.more_vert,
-  // color: Theme.of(context).primaryIconTheme.color,
-  // ),
-  // items: [
-  // DropdownMenuItem(
-  // child: Container(
-  // child: Row(
-  // children: [Icon(Icons.exit_to_app), Text('logout')],
-  // )),
-  // value: 'logout',
-  // )
-  // ],
-  // onChanged: (itemIdentifier) async {
-  // if (itemIdentifier == 'logout') {
-  // FirebaseAuth.instance.signOut();
-  // if (AuthForm.google) {
-  // await googleSignIn.disconnect();
-  // await googleSignIn.signOut();
-  // }
-  // }
-  // },
-  // )
-  //
-
-
-
-
+//   Widget getlist(){
+//
+//     StreamBuilder(
+//       stream: FirebaseFirestore.instance.collection("GroupRoom").snapshots(),
+//       builder: (context, snapshot) {
+// //        print(snapshot.data)
+//         return snapshot.hasData
+//             ? ListView.builder(
+//             itemCount: snapshot.data.docs.length,
+//             itemBuilder: (context, index) {
+//               print(snapshot.data.docs[index]["users "]);
+//               print("jbkf");
+//
+//               return Text(snapshot.data.docs[index]["users "]);
+//             })
+//             : Container(child: Text("fbvjefb"),);
+//       },
+//     );
+//   }
 
 
 
@@ -264,9 +159,10 @@ class _GroupkibaatState extends State<Groupkibaat> {
         title:    ListTile(
           title:  Text("${widget.chatRoomId}",
           style: TextStyle(color: Colors.white),),
-         // subtitle: Text("${GcState().temp}"),
+          subtitle:   Text("${widget.users}", style: TextStyle(color: Colors.white),)
 
-      ),
+
+        ),
 
 
 

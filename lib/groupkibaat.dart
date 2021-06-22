@@ -189,7 +189,7 @@ class GroupkibaatState extends State<Groupkibaat> {
         decoration: BoxDecoration(
           image: DecorationImage(
             image: AssetImage(
-              'assets/whbg.jpg',
+              'assets/ppp.jpg',
             ),
             fit: BoxFit.fill,
           ),

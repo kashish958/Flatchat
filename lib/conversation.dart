@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flatchat/Searchsreen.dart';
 import 'package:flatchat/Signup.dart';
@@ -162,8 +163,9 @@ class Conversationstate extends State<Conversation> {
       d.addingimage(widget.chatRoomId, imgMap);
     }
   }
-
+  final user = FirebaseAuth.instance.currentUser;
   sendMessage() {
+    print(user.uid);
     if (messagecontroller.text.isNotEmpty) {
       Map<String, dynamic> messageMap = {
         "message": messagecontroller.text,
@@ -171,7 +173,12 @@ class Conversationstate extends State<Conversation> {
         "time": DateTime.now()
       };
       d.addConversationMessages(widget.chatRoomId, messageMap);
-      messagecontroller.clear();
+      FirebaseFirestore.instance.collection('Userss').doc(widget.userName).update({
+        'lastmsg': messagecontroller.text,
+        "lasttime": DateTime.now(),
+        // "name": widget.name,
+      });
+     messagecontroller.clear();
     }
   }
   // getlast() {
@@ -323,7 +330,7 @@ class Conversationstate extends State<Conversation> {
         decoration: BoxDecoration(
           image: DecorationImage(
             image: AssetImage(
-              'assets/whbg.jpg',
+              'assets/ppp.jpg',
             ),
             fit: BoxFit.fill,
           ),
@@ -405,11 +412,8 @@ class Conversationstate extends State<Conversation> {
                             sendMessage();
                           //  getlast();
                             print("isshbot");
-                            FirebaseFirestore.instance.collection('ChatRoom').doc(widget.chatRoomId).update({
-                              'lastmsg': messagecontroller.text,
-                              "lasttime": DateTime.now(),
-                              // "name": widget.name,
-                            });
+
+
                             hh = false;
                           },
                           child: Container(

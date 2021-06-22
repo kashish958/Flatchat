@@ -44,6 +44,27 @@ Stream   chatMessagesStream;
 
   }
 
+//   Widget showlm(String ){
+//
+//     return StreamBuilder(
+//         stream: FirebaseFirestore.instance.collection("ChatRoom").doc().snapshots(),
+//         builder: (context, snapshot) {
+//           return  ListView.builder(
+//               itemCount: snapshot.data.docs.length,
+//               //   shrinkWrap: true,
+//               itemBuilder: (context, index) {
+// return Text(snapshot.data.docs[index]["lastmsg"]);
+//               }
+//           );
+//         }
+//     );
+//   }
+
+
+  // showlm(){
+  //
+  // }
+
 
 
   Widget showlist() {
@@ -75,22 +96,22 @@ Stream   chatMessagesStream;
 
                           ),
                           title:
-                           TextButton(onPressed: (){
-                                  setState(() {
-                                    Searchstate().createchatroomandtalk(context,
-                                        userName: snapshot.data.docs[index]["field1"]
-                                    );
-                                  });
-                                }, child: Text(snapshot.data.docs[index]["field1"] ,
-                                  style: TextStyle(fontWeight: FontWeight.bold  ,color: Colors.black,fontSize: 18) ,  ) ),
-                              //  Text("04:30" ,style : TextStyle(color:Colors.grey,fontSize: 14)),
-                          subtitle:StreamBuilder(
-                    stream: FirebaseFirestore.instance.collection("ChatRoom").snapshots(),
-                    builder: (context, snapshot) {
-                      print(snapshot.data.docs[index]["lastmsg"].toString());
-                      return Text(snapshot.data.docs[index]["lastmsg"].toString());
-                    }
-                          ) ,
+                           Row(
+                             children: [
+                               TextButton(onPressed: (){
+                                      setState(() {
+                                        Searchstate().createchatroomandtalk(context,
+                                            userName: snapshot.data.docs[index]["field1"]
+                                        );
+                                      });
+                                    }, child: Text(snapshot.data.docs[index]["field1"] ,
+                                      style: TextStyle(fontWeight: FontWeight.bold  ,color: Colors.black,fontSize: 18) ,  ) ),
+
+                               Text("                                        ${snapshot.data.docs[index]["lasttime"].toDate().hour} :"  "${snapshot.data.docs[index]["lasttime"].toDate().minute }" ,style : TextStyle(color:Colors.grey,fontSize: 14))
+                             ],
+                           ),
+                         subtitle: Text(snapshot.data.docs[index]["lastmsg"]),     //  Text("04:30" ,style : TextStyle(color:Colors.grey,fontSize: 14)),
+
                         ),
 
 

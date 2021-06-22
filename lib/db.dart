@@ -36,9 +36,11 @@ getuserbyemail(String email) async{
     print("lk");
     print(photo);
     Map <String,dynamic> data = {
-      "field1" :UserNameCtrl,"field2" :UserEmailCtrl ,"URL" :photo
+      "field1" :UserNameCtrl,"field2" :UserEmailCtrl ,"URL" :photo , "lastmsg" :"huhuh",
+      "lasttime":DateTime.now()
+
     };
-    FirebaseFirestore.instance.collection("Userss").add(data);
+    FirebaseFirestore.instance.collection("Userss").doc(UserNameCtrl).set(data);
 
   }
 

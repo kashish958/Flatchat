@@ -60,8 +60,8 @@ createchatroomandtalk(  BuildContext context,  {String userName}) async{
   Map<String, dynamic> chatRoomMap = {
     "users ": users,
     "chatroomid": chatRoomId,
-    "lastmsg" :"huhuh",
-    "lasttime":DateTime.now()
+    // "lastmsg" :"huhuh",
+    // "lasttime":DateTime.now()
 
   };
   print("ayaya");

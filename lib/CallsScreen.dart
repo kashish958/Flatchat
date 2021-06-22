@@ -39,13 +39,148 @@ class NewsState extends State<News> {
   }
 
   //var y = find(value);
+  Widget shownews(){
+  return
+  StreamBuilder<List<Article>>(
+  stream: nb.newsoutput,
+  builder: (context, snapshot) {
+  if (snapshot.hasError) {
+  print(snapshot.error);
+  print("jhfo");
+  }
+  if (snapshot.hasData) {
+  return ListView.builder(
+  itemCount: snapshot.data.length,
+  itemBuilder: (context, index) {
+  article = snapshot.data[index];
 
-  @override
+  if (issearch && a != null) {
+  print(a);
+  //find(value);
+
+  //  if(article.title.contains("rahul"))
+
+  filternews = snapshot.data;
+  if (filternews[index]
+      .title
+      .toLowerCase()
+      .contains(a.toLowerCase()))
+  //   filternews = article;
+
+  return InkWell(
+  onTap: () {
+  Navigator.push(
+  context,
+  MaterialPageRoute(
+  builder: (context) =>
+  View(Url: filternews[index].url)),
+  );
+  },
+  child: Container(
+  height: 100,
+  //padding: EdgeInsets.symmetric(horizontal: 12),
+
+  margin: const EdgeInsets.all(8),
+  child: Row(children: <Widget>[
+  Card(
+  clipBehavior: Clip.antiAlias,
+  shape: RoundedRectangleBorder(
+  borderRadius: BorderRadius.circular(24),
+  ),
+  child: AspectRatio(
+  child: Image.network(
+  filternews[index].urlToImage,
+  fit: BoxFit.cover,
+  ),
+  aspectRatio: 1,
+  ),
+  ),
+  //  SizedBox(width: 16),
+  Flexible(
+  child: Column(
+  // crossAxisAlignment: CrossAxisAlignment.start,
+  children: <Widget>[
+  Text(
+  filternews[index].title,
+  style: TextStyle(
+  fontSize: 13,
+  fontWeight: FontWeight.bold),
+  ),
+  Text(
+  filternews[index].description,
+  maxLines: 1,
+  ),
+  ],
+  ),
+  ),
+  ]),
+  ),
+  );
+  } else {
+//if(issearch)
+  //filternews= article;
+
+  return InkWell(
+  onTap: () {
+  Navigator.push(
+  context,
+  MaterialPageRoute(
+  builder: (context) => View(Url: article.url)),
+  );
+  },
+  child: Container(
+  height: 100,
+  //padding: EdgeInsets.symmetric(horizontal: 12),
+
+  margin: const EdgeInsets.all(8),
+  child: Row(children: <Widget>[
+  Card(
+  clipBehavior: Clip.antiAlias,
+  shape: RoundedRectangleBorder(
+  borderRadius: BorderRadius.circular(24),
+  ),
+  child: AspectRatio(
+  aspectRatio: 1,
+  child: Image.network(
+  article.urlToImage,
+  fit: BoxFit.cover,
+  )),
+  ),
+  SizedBox(width: 16),
+  Flexible(
+  child: Column(
+  // crossAxisAlignment: CrossAxisAlignment.start,
+  children: <Widget>[
+  Text(
+  article.title,
+  style: TextStyle(
+  fontSize: 13,
+  fontWeight: FontWeight.bold),
+  ),
+  Text(
+  article.description,
+  maxLines: 1,
+  ),
+  ],
+  ),
+  ),
+  ]
+  ),
+  ),
+  );
+  }
+  });
+  } else
+  return Center(child: CircularProgressIndicator());
+  },
+  );
+}
+
+@override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
+    return  Scaffold(
         appBar: AppBar(
-          backgroundColor: Colors.black26,
+          backgroundColor: Colors.green,
           title: titleapp,
           actions: <Widget>[
 
@@ -81,7 +216,7 @@ class NewsState extends State<News> {
             children: <Widget>[
               DrawerHeader(
                 child: Text("Categories"),
-                decoration: BoxDecoration(color: Colors.black26),
+                decoration: BoxDecoration(color: Colors.green),
               ),
               ListTile(
                 title: Text("Entertainment"),
@@ -144,140 +279,14 @@ class NewsState extends State<News> {
             ],
           ),
         ),
-        body: StreamBuilder<List<Article>>(
-          stream: nb.newsoutput,
-          builder: (context, snapshot) {
-            if (snapshot.hasError) {
-              print(snapshot.error);
-              print("jhfo");
-            }
-            if (snapshot.hasData) {
-              return ListView.builder(
-                  itemCount: snapshot.data.length,
-                  itemBuilder: (context, index) {
-                    article = snapshot.data[index];
 
-                    if (issearch && a != null) {
-                      print(a);
-                      //find(value);
 
-                      //  if(article.title.contains("rahul"))
 
-                      filternews = snapshot.data;
-                      if (filternews[index]
-                          .title
-                          .toLowerCase()
-                          .contains(a.toLowerCase()))
-                        //   filternews = article;
+        body:
+          Container(
+           child: shownews()
+          )
 
-                        return InkWell(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      View(Url: filternews[index].url)),
-                            );
-                          },
-                          child: Container(
-                            height: 100,
-                            //padding: EdgeInsets.symmetric(horizontal: 12),
-
-                            margin: const EdgeInsets.all(8),
-                            child: Row(children: <Widget>[
-                              Card(
-                                clipBehavior: Clip.antiAlias,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(24),
-                                ),
-                                child: AspectRatio(
-                                  child: Image.network(
-                                    filternews[index].urlToImage,
-                                    fit: BoxFit.cover,
-                                  ),
-                                  aspectRatio: 1,
-                                ),
-                              ),
-                              //  SizedBox(width: 16),
-                              Flexible(
-                                child: Column(
-                                  // crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: <Widget>[
-                                    Text(
-                                      filternews[index].title,
-                                      style: TextStyle(
-                                          fontSize: 13,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    Text(
-                                      filternews[index].description,
-                                      maxLines: 1,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ]),
-                          ),
-                        );
-                    } else {
-//if(issearch)
-                      //filternews= article;
-
-                      return InkWell(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => View(Url: article.url)),
-                          );
-                        },
-                        child: Container(
-                          height: 100,
-                          //padding: EdgeInsets.symmetric(horizontal: 12),
-
-                          margin: const EdgeInsets.all(8),
-                          child: Row(children: <Widget>[
-                            Card(
-                              clipBehavior: Clip.antiAlias,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(24),
-                              ),
-                              child: AspectRatio(
-                                  aspectRatio: 1,
-                                  child: Image.network(
-                                    article.urlToImage,
-                                    fit: BoxFit.cover,
-                                  )),
-                            ),
-                            SizedBox(width: 16),
-                            Flexible(
-                              child: Column(
-                                // crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  Text(
-                                    article.title,
-                                    style: TextStyle(
-                                        fontSize: 13,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  Text(
-                                    article.description,
-                                    maxLines: 1,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ]
-                          ),
-                        ),
-                      );
-                    }
-                  });
-            } else
-              return Center(child: CircularProgressIndicator());
-          },
-        ),
-      ),
     );
   }
 }

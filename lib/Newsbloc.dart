@@ -50,21 +50,17 @@ eventoutput.listen((event) async{
  //getting response in this function
 getNews(String category) async {
 
-
+print("popop");
      // var response = await get
       var response = await http.get(Uri.parse('https://newsapi.org/v2/top-headlines?country=us&category=$category&apiKey=aeff9545dbe241c19d28b1002d70b0e3'));
     //print(response.body);
 
       if (response.statusCode == 200) {
-
         var jsonString = response.body;
         var jsonMap = json.decode(jsonString);
-
         newsModel = NewsModel.fromJson(jsonMap);
    print("hii");
-
        // print(newsModel);
-
     }
 
 

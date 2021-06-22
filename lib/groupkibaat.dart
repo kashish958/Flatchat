@@ -64,55 +64,11 @@ class GroupkibaatState extends State<Groupkibaat> {
     }
   }
 
-  // _displayDialog(BuildContext context) async {
-  //   return showDialog(
-  //       context: context,
-  //       builder: (context) {
-  //         return AlertDialog(
-  //           title: Text("Send Image"),
-  //           actions: <Widget>[
-  //             Row(
-  //               children: [
-  //                 FlatButton(
-  //                   child: Icon(Icons.camera_alt_outlined),
-  //                   onPressed: () {
-  //                     chooseimg(ImageSource.camera);
-  //                     // Navigator.of(context).pop();
-  //                   },
-  //                 ),
-  //                 FlatButton(
-  //                   child: Icon(Icons.filter),
-  //                   onPressed: () {
-  //                     chooseimg(ImageSource.gallery);
-  //                     //   Navigator.of(context).pop();
-  //                   },
-  //                 ),
-  //                 IconButton(
-  //                     icon: Icon(Icons.send_rounded),
-  //                     onPressed: () {
-  //                       addimg(imgfile).then((value) {
-  //                         sendimg(value);
-  //
-  //                         ChatimageList();
-  //                       });
-  //                       Navigator.of(context).pop();
-  //                     })
-  //               ],
-  //             ),
-  //           ],
-  //         );
-  //       });
-  // }
   List li=[] ;
 
   @override
   void initState() {
 
-    // GcState().getlist().then((val){
-    //   li=val;
-    //   print("huh");
-    // });
-    // print(li);
 
     d.getgroupmsg(widget.chatRoomId).then((value) {
       setState(() {
@@ -125,28 +81,6 @@ class GroupkibaatState extends State<Groupkibaat> {
 
     super.initState();
   }
-
-
-//   Widget getlist(){
-//
-//     StreamBuilder(
-//       stream: FirebaseFirestore.instance.collection("GroupRoom").snapshots(),
-//       builder: (context, snapshot) {
-// //        print(snapshot.data)
-//         return snapshot.hasData
-//             ? ListView.builder(
-//             itemCount: snapshot.data.docs.length,
-//             itemBuilder: (context, index) {
-//               print(snapshot.data.docs[index]["users "]);
-//               print("jbkf");
-//
-//               return Text(snapshot.data.docs[index]["users "]);
-//             })
-//             : Container(child: Text("fbvjefb"),);
-//       },
-//     );
-//   }
-
 
 
   @override

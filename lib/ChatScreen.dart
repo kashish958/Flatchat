@@ -1,6 +1,5 @@
 import 'dart:ui';
 import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:flatchat/Auth.dart';
 import 'package:flatchat/Login.dart';
@@ -39,32 +38,7 @@ Stream   chatMessagesStream;
 
   getchatroomidformsg(String val) {
     chatRoomId=val;
-
-
-
   }
-
-//   Widget showlm(String ){
-//
-//     return StreamBuilder(
-//         stream: FirebaseFirestore.instance.collection("ChatRoom").doc().snapshots(),
-//         builder: (context, snapshot) {
-//           return  ListView.builder(
-//               itemCount: snapshot.data.docs.length,
-//               //   shrinkWrap: true,
-//               itemBuilder: (context, index) {
-// return Text(snapshot.data.docs[index]["lastmsg"]);
-//               }
-//           );
-//         }
-//     );
-//   }
-
-
-  // showlm(){
-  //
-  // }
-
 
 
   Widget showlist() {
@@ -107,7 +81,8 @@ Stream   chatMessagesStream;
                                     }, child: Text(snapshot.data.docs[index]["field1"] ,
                                       style: TextStyle(fontWeight: FontWeight.bold  ,color: Colors.black,fontSize: 18) ,  ) ),
 
-                               Text("                                        ${snapshot.data.docs[index]["lasttime"].toDate().hour} :"  "${snapshot.data.docs[index]["lasttime"].toDate().minute }" ,style : TextStyle(color:Colors.grey,fontSize: 14))
+                               Text("                                        ${snapshot.data.docs[index]["lasttime"].toDate().hour} :"
+                                   "${snapshot.data.docs[index]["lasttime"].toDate().minute }" ,style : TextStyle(color:Colors.grey,fontSize: 14))
                              ],
                            ),
                          subtitle: Text(snapshot.data.docs[index]["lastmsg"]),     //  Text("04:30" ,style : TextStyle(color:Colors.grey,fontSize: 14)),
@@ -125,13 +100,7 @@ Stream   chatMessagesStream;
         });
   }
 
- Future<Widget> showlastmsg() {
-    print("aeee");
- //   print(chatMessagesStream.length);
 
-
-
-  }
 
   @override
   void initState() {
@@ -152,49 +121,7 @@ Stream   chatMessagesStream;
         return Scaffold(
 
 
-        //    floatingActionButton: Container(
 
-            //  margin: EdgeInsets.only(top: 390),
-              // child: Column(
-              //
-              //
-              //
-              //   children: [
-              //
-              //      FloatingActionButton(
-              //
-              //       onPressed:(){
-              //           Navigator.push(context,
-              //             MaterialPageRoute(builder: (context) => GroupList()));
-
-//                     }, child: Row(
-//                     children: [
-//                       Icon(Icons.arrow_forward_ios_rounded,size: 20, ),
-//                       Text("Grps")
-//                     ],
-//                   ),
-//                   ),
-//
-// SizedBox(height: 100,),
-//                   // FloatingActionButton(
-                  //   child: Icon(Icons.group_add),
-                  //   onPressed: () {
-                  //     Navigator.push(context,
-                  //         MaterialPageRoute(builder: (context) => Gc()));
-                  //   },
-                  // ),
-
-                  //
-                  // FloatingActionButton(
-                  //   child: Icon(Icons.search),
-                  //   onPressed: () {
-                  //     Navigator.push(context,
-                  //         MaterialPageRoute(builder: (context) => Searchscreen()));
-                  //   },
-                  // ),
-            //    ],
-           //   ),
-           // ),
             body:
 
             showlist(),

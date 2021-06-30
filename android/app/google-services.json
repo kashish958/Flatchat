@@ -1,33 +1,42 @@
 {
   "project_info": {
-    "project_number": "197138886544",
-    "project_id": "chatting-73928",
-    "storage_bucket": "chatting-73928.appspot.com"
+    "project_number": "663275576791",
+    "firebase_url": "https://wchat-7e224-default-rtdb.firebaseio.com",
+    "project_id": "wchat-7e224",
+    "storage_bucket": "wchat-7e224.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:197138886544:android:8426f5988221da2888cd15",
+        "mobilesdk_app_id": "1:663275576791:android:b93082a264492cb29bbf92",
         "android_client_info": {
           "package_name": "com.kashish.flatchat"
         }
       },
       "oauth_client": [
         {
-          "client_id": "197138886544-h8e6nbk9953gf47te8qrhmmkrugqs00k.apps.googleusercontent.com",
+          "client_id": "663275576791-52nm444rav8ksk4chvegj9kb0lb5rpoe.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.kashish.flatchat",
+            "certificate_hash": "5e92a7cb92ee6c1dff9de66bd61b4b050e6fca11"
+          }
+        },
+        {
+          "client_id": "663275576791-l0q3dd8988vg84q5brbiuccfl8f3845m.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyC9v8aHWHNApcUnt2kxfpZMyiLCSDq4Jik"
+          "current_key": "AIzaSyD7vMq-NJMxuU12Bp2D-92qUROIjRlNf6Y"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "197138886544-h8e6nbk9953gf47te8qrhmmkrugqs00k.apps.googleusercontent.com",
+              "client_id": "663275576791-l0q3dd8988vg84q5brbiuccfl8f3845m.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

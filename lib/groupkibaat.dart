@@ -14,12 +14,16 @@ import 'Auth.dart';
 import 'db.dart';
 import 'package:path/path.dart';
 import 'db.dart';
+import 'FirebaseApi.dart';
 import 'gc.dart';
+import 'package:video_player/video_player.dart';
+
 
 class Groupkibaat extends StatefulWidget {
   final String chatRoomId ;
   final List users;
-  Groupkibaat(this.chatRoomId,this.users);
+  final String url;
+  Groupkibaat(this.chatRoomId,this.users,this.url);
 
   @override
   GroupkibaatState createState() => GroupkibaatState();
@@ -35,6 +39,13 @@ class GroupkibaatState extends State<Groupkibaat> {
   Stream chatMessagesStream;
   Stream imgstream;
   bool hh = false;
+  UploadTask tt;
+  VideoPlayerController _controller;
+
+  Future<void> _initializeVideoPlayerFuture;
+  // final picker = ImagePicker();
+  File vi;
+
   @override
   Widget ChatMessageList() {
     return StreamBuilder(
@@ -45,24 +56,336 @@ class GroupkibaatState extends State<Groupkibaat> {
                 itemCount: snapshot.data.docs.length,
                 itemBuilder: (context, index) {
                   return MessageTile(snapshot.data.docs[index]["message"],
-                      snapshot.data.docs[index]["sendby"] == Constants.myName,snapshot.data.docs[index]["sendby"]);
+                      snapshot.data.docs[index]["sendby"] == Constants.myName,snapshot.data.docs[index]["sendby"],snapshot.data.docs[index]["time"],snapshot.data.docs[index]["type"]);
                 })
             : Container();
       },
     );
   }
 
-   sendMessage() {
-    if (messagecontroller.text.isNotEmpty) {
+  @override
+  Future addimg(File pickedimg) async {
+    String fileName = basename(pickedimg.path);
+    Reference firebaseStorageRef =
+    FirebaseStorage.instance.ref().child('uploads/$fileName');
+    UploadTask uploadTask = firebaseStorageRef.putFile(pickedimg);
+    TaskSnapshot taskSnapshot = await (await uploadTask);
+    await taskSnapshot.ref.getDownloadURL().then((value) {
+      print("Done" + value);
+      iurl = value;
+    });
+
+    return iurl;
+  }
+
+  @override
+  Future chooseimg(ImageSource source) async {
+    final pickedimage = await picker.getImage(source: source);
+
+    setState(() {
+      imgfile = File(pickedimage.path);
+      print(imgfile.path);
+    });
+    return imgfile;
+  }
+
+//for sending image
+  sendimg(int i ,String ii ) {
+    print(ii);
+    sendMessage(0, ii);
+    // if (imgfile != null) {
+    //   Map<String, dynamic> imgMap = {
+    //     "imgurl": ii,
+    //     "sendby": Constants.myName,
+    //     "time": DateTime.now()
+    //   };
+    //   d.addingimage(widget.chatRoomId, imgMap);
+    // }
+  }
+
+  pickvideo()async{
+    final video = await picker.getVideo(source: ImageSource.gallery);
+    vi = File(video.path);
+
+    //   Future selectFile() async {
+    // final result = await FilePicker.platform.pickFiles(allowMultiple: false);
+    //
+    // if (result == null) vireturn;
+    // final path = result.files.single.path!;
+    //
+    // setState(() => file = File(path));
+
+
+    if (vi == null) return;
+
+    final fileName = basename(vi.path);
+    final destination = 'videos/$fileName';
+
+
+    tt = FirebaseApi.uploadFile(destination, vi);
+    setState(() {});
+
+    if (tt == null) return;
+
+    final snapshot = await tt.whenComplete(() {});
+    final urlDownload = await snapshot.ref.getDownloadURL();
+
+    print('Download-Link: $urlDownload');
+    print("hhhuhuhuhuhuh"+urlDownload);
+    // _controller= VideoPlayerController.network(urlDownload)..initialize().then((value) {
+    //   setState(() {
+    //     _initializeVideoPlayerFuture=_controller.initialize();
+    //   });
+    //   _controller.play();});
+
+    return urlDownload;
+
+  }
+
+
+
+  Widget bottomSheet(BuildContext context) {
+    return Container(
+      height: 180,
+      width: MediaQuery.of(context).size.width,
+      child: Card(
+        margin: EdgeInsets.all(10),
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      chooseimg(ImageSource.camera).then((value) => {
+                        addimg(value).then((value) {
+                          sendimg(0,value);
+
+                          //ChatimageList();
+                        })
+                      });
+                      Navigator.of(context).pop();
+                    },
+                    child: CircleAvatar(
+                      radius: 28,
+                      backgroundColor: Colors.blueAccent[100],
+                      child: Icon(
+                        Icons.camera_alt,
+                        size: 20,
+                        color: Colors.blueAccent[600],
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    width: 30,
+                  ),
+                  GestureDetector(
+                    child: CircleAvatar(
+                      radius: 28,
+                      backgroundColor: Colors.green[200],
+                      child: Icon(
+                        Icons.image,
+                        size: 20,
+                        color: Colors.blueGrey,
+                      ),
+                    ),
+                    onTap: (){
+                      chooseimg(ImageSource.gallery).then((value) =>{
+                        addimg(value).then((value) {
+                          sendimg(0,value);
+
+                         // ChatimageList();
+                        })
+                      });
+                      Navigator.of(context).pop();
+
+
+                    },
+                  ),
+                  SizedBox(
+                    width: 30,
+                  ),
+                  GestureDetector(
+                    child: CircleAvatar(
+                      radius: 28,
+                      backgroundColor: Colors.red[200],
+                      child: Icon(
+                        Icons.video_call_outlined,
+                        size: 20,
+                        color: Colors.blueGrey,
+                      ),
+                    ),
+                    onTap: (){
+                     pickvideo().then((value){
+
+
+                       sendvid(2,value);
+                     });
+
+
+                      // chooseimg(ImageSource.gallery).then((value) =>{
+                      //   addimg(value).then((value) {
+                      //     sendimg(0,value);
+                      //
+                      //     ChatimageList();
+                      //   })
+                      // });
+                      Navigator.of(context).pop();
+
+
+                    },
+                  ),
+
+
+
+
+
+
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      // chooseimg(ImageSource.camera).then((value) => {
+                      //   addimg(value).then((value) {
+                      //     sendimg(0,value);
+                      //
+                      //     ChatimageList();
+                      //   })
+                      // });
+                      Navigator.of(context).pop();
+                    },
+                    child: CircleAvatar(
+                      radius: 28,
+                      backgroundColor: Colors.deepPurpleAccent,
+                      child: Icon(
+                        Icons.contacts_sharp,
+                        size: 20,
+                        color: Colors.blueAccent[600],
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    width: 30,
+                  ),
+                  GestureDetector(
+                    child: CircleAvatar(
+                      radius: 28,
+                      backgroundColor: Colors.yellow[200],
+                      child: Icon(
+                        Icons.file_copy,
+                        size: 20,
+                        color: Colors.blueAccent[600],
+                      ),
+                    ),
+                    onTap: (){
+                      // chooseimg(ImageSource.gallery).then((value) =>{
+                      //   addimg(value).then((value) {
+                      //     sendimg(0,value);
+                      //
+                      //     ChatimageList();
+                      //   })
+                      // });
+                      // Navigator.of(context).pop();
+
+
+                    },
+                  ),
+                  SizedBox(
+                    width: 30,
+                  ),
+                  GestureDetector(
+                    child: CircleAvatar(
+                      radius: 28,
+                      backgroundColor: Colors.orange[200],
+                      child: Icon(
+                        Icons.location_on,
+                        size: 20,
+                        color: Colors.blueGrey[600],
+                      ),
+                    ),
+                    onTap: (){
+                      // pickvideo().then((value){
+                      // _controller= VideoPlayerController.network(message)..initialize().then((value) {
+                      //   setState(() {
+                      //     _initializeVideoPlayerFuture=_controller.initialize();
+                      //   });
+                      //   _controller.play();
+
+                      // sendvid(2,value);
+                      //  });
+
+
+                      // chooseimg(ImageSource.gallery).then((value) =>{
+                      //   addimg(value).then((value) {
+                      //     sendimg(0,value);
+                      //
+                      //     ChatimageList();
+                      //   })
+                      // });
+                      Navigator.of(context).pop();
+
+
+                    },
+                  )
+
+                ],
+              ),
+
+
+
+
+            )
+
+          ],
+        ),
+      ),
+    );
+  }
+
+
+
+
+  String  usersListToString;
+  void listToString(){
+    usersListToString = widget.users.reduce((value, element) => value + ', ' + element);
+
+  }
+  sendvid(int i ,String vv){
+    print(vv);
+    sendMessage(i, vv);
+
+  }
+
+
+
+   sendMessage(int i ,String msgg) {
+
       Map<String, dynamic> messageMap = {
-        "message": messagecontroller.text,
+        "message": msgg,
         "sendby": Constants.myName,
-        "time": DateTime.now().microsecondsSinceEpoch
+        "time": DateTime.now(),
+        "type":i
+
       };
       d.addgroupmsg(widget.chatRoomId, messageMap);
+      FirebaseFirestore.instance.collection('GroupRoom').doc(widget.chatRoomId).update({
+        'lastmsg': messagecontroller.text,
+        "lasttime": DateTime.now(),
+        // "name": widget.name,
+      });
       messagecontroller.clear();
     }
-  }
+
 
   List li=[] ;
 
@@ -78,7 +401,7 @@ class GroupkibaatState extends State<Groupkibaat> {
 
 
 
-
+    listToString();
     super.initState();
   }
 
@@ -92,8 +415,8 @@ class GroupkibaatState extends State<Groupkibaat> {
 
         title:    ListTile(
           title:  Text("${widget.chatRoomId}",
-          style: TextStyle(color: Colors.white),),
-          subtitle:   Text("${widget.users}", style: TextStyle(color: Colors.white),)
+          style: TextStyle(color: Colors.white,fontSize: 19),),
+          subtitle:   Text("${usersListToString}", style: TextStyle(color: Colors.white,fontSize: 12),)
 
 
         ),
@@ -103,17 +426,50 @@ class GroupkibaatState extends State<Groupkibaat> {
 
         //Text("${widget.chatRoomId}"),
 
-        leading: Icon(Icons.group_work ),
-       actions: [
-         GestureDetector(
-             onTap: () {
-               //a.signout();
-               Navigator.pushReplacement(context,
-                   MaterialPageRoute(builder: (context) => Home() )
-               );
+          leading: Row(
+            children: [
+              GestureDetector(
+                  onTap: () {
+                    //a.signout();
+                    Navigator.pushReplacement(context,
+                        MaterialPageRoute(builder: (context) => Home() )
+                    );
 
-             },
-             child: Icon(Icons.arrow_back))
+                  },
+                  child: Icon(Icons.arrow_back)),
+
+              Expanded(
+                child: CircleAvatar(
+radius: 25,
+                    foregroundColor:Color(0xff075E54),
+                    backgroundColor:Colors.grey ,
+                    backgroundImage: NetworkImage(
+                      widget.url,
+
+                      //fit: BoxFit.fitWidth,
+//height: 70,
+                      //width: 50,
+                    )
+
+                ),
+              ),
+            ],
+          ),
+       actions: [
+         Container(
+padding: EdgeInsets.only(right: 15),
+           child: Row(
+             children: [
+               Icon(Icons.call),
+               Text("   "),
+               Icon(Icons.more_vert),
+             ],
+           ),
+
+         )
+
+
+
 
        ],
       ),
@@ -123,7 +479,7 @@ class GroupkibaatState extends State<Groupkibaat> {
         decoration: BoxDecoration(
           image: DecorationImage(
             image: AssetImage(
-              'assets/ppp.jpg',
+              'assets/whbg.jpg',
             ),
             fit: BoxFit.fill,
           ),
@@ -133,42 +489,64 @@ class GroupkibaatState extends State<Groupkibaat> {
           children: [
             //chatMessages(),
             ChatMessageList(),
-          //  ChatimageList(),
+            //  ChatimageList(),
 
             //ChatimageList(),
             Container(
               alignment: Alignment.bottomCenter,
-              child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 24, vertical: 24),
-                color: Color(0x54FFFFFF),
+              decoration: BoxDecoration(
+
+                // borderRadius: BorderRadius.all(Radius.circular(30))
+              ),
+              child:
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 6, ),
+                decoration: BoxDecoration(
+
+                    color: Colors.white,
+
+                    borderRadius: BorderRadius.all(Radius.circular(30))
+                ),
+                //  color: Colors.white,
                 child: Row(
                   children: [
                     Container(
-                        height: 70,
-                        width: 40,
-                        color: Colors.transparent,
-                        child: imgfile != null
-                            ? Image.file(
-                                imgfile,
-                                fit: BoxFit.fill,
-                              )
-                            : Container()),
-                    Expanded(
-                        child: TextField(
-                      controller: messagecontroller,
-
-                      //style: simpleTextStyle(),
-
-                      decoration: InputDecoration(
-                        hintText: "Message ...",
-                        hintStyle: TextStyle(
-                          color: Colors.black,
-                          fontSize: 16,
-                        ),
-                        border: InputBorder.none,
-                        filled: true,
+                      decoration: BoxDecoration(
+                          color: Colors.grey[200],
+                          borderRadius: BorderRadius.circular(50)),
+                      width: 40,
+                      height: 50,
+                      child: Icon(
+                        Icons.emoji_emotions,
+                        color: Colors.grey[800],
                       ),
-                    )),
+                    ),
+                    Expanded(
+//width: 164,
+                      //height: 40,
+                        child: TextField(
+                          controller: messagecontroller,
+
+                          //style: simpleTextStyle(),
+
+                          decoration: InputDecoration(
+
+                            fillColor: Colors.white,
+                            hintText: "Type a message",
+                            hintStyle: TextStyle(
+                              color: Colors.black,
+                              fontSize: 16,
+
+                            ),
+                            border: InputBorder.none,
+
+
+                            filled: true,
+                          ),
+
+
+
+                        )),
                     Row(
                       children: [
                         FlatButton(
@@ -177,8 +555,16 @@ class GroupkibaatState extends State<Groupkibaat> {
                           onPressed: () {
                             //  addMessage();
                             print("press");
-  //                          _displayDialog(context);
+                            // _displayDialog(context);
+                            showModalBottomSheet(
+                                elevation: 10,
 
+                                isScrollControlled: true,
+                                isDismissible: true,
+                                enableDrag: true,
+                                backgroundColor: Colors.transparent,
+                                context: context,
+                                builder: (builder) => bottomSheet(context));
                             print("press");
                             //  sendMessage();
                           },
@@ -195,22 +581,34 @@ class GroupkibaatState extends State<Groupkibaat> {
                             ],
                           ),
                         ),
+                        //Spacer(),
+
                         FlatButton(
                           minWidth: 40,
                           height: 10,
+
                           onPressed: () {
                             //  addMessage();
                             print("press");
+                          //  messager = messagecontroller.text;
+                            sendMessage(1,messagecontroller.text);
+                            //  getlast();
+                            print("isshbot");
 
-                            sendMessage();
+
                             hh = false;
                           },
-                          child: Container(
-                            height: 40,
-                            width: 30,
-                            padding: EdgeInsets.all(12),
-                            child: Icon(
-                              Icons.send_rounded,
+                          child: CircleAvatar(
+                            backgroundColor: Color(0xff075E54),
+
+                            child: Container(
+                              height: 70,
+                              width: 40,
+
+                              padding: EdgeInsets.all(5),
+                              child: Icon(
+                                Icons.send_rounded,
+                              ),
                             ),
                           ),
                         ),
@@ -230,58 +628,169 @@ class GroupkibaatState extends State<Groupkibaat> {
 
                                 //// MSGTile///
 
-class MessageTile extends StatelessWidget{
+class MessageTile extends StatefulWidget {
   final String message;
   final bool isSendByMe;
   String sender;
-  MessageTile(this.message,this.isSendByMe,this.sender);
+  final Timestamp time;
+  final int type;
+
+
+  MessageTile(this.message, this.isSendByMe, this.sender,this.time,this.type);
+
   @override
+  _MessageTileState createState() => _MessageTileState();
+}
+
+class _MessageTileState extends State<MessageTile> {
+  VideoPlayerController _controller;
+
+  Future<void> _initializeVideoPlayerFuture;
+  static VoidCallback listener;
   Widget build(BuildContext context) {
 
+    if (_controller == null) {
+      _controller =
+      VideoPlayerController.network(widget.message)
+        ..addListener(listener = () {
+          setState(() {});
+        })
+        ..setVolume(1.0)
+        ..initialize().then((value) {
+          setState(() {
+
+          });
+
+          _initializeVideoPlayerFuture=_controller.initialize();
+          _controller.play();
+        });
+    }
+
+
+
     return Container(
-      padding: EdgeInsets.only(left: isSendByMe ?0:24,right:isSendByMe?24: 0),
+      padding: EdgeInsets.only(
+          left: widget.isSendByMe ? 0 : 24, right: widget.isSendByMe ? 24 : 0),
       margin: EdgeInsets.symmetric(vertical: 8),
-      width: MediaQuery.of(context).size.width,
-      alignment:  isSendByMe ? Alignment.centerRight:Alignment.centerLeft,
+      width: MediaQuery
+          .of(context)
+          .size
+          .width,
+      alignment: widget.isSendByMe ? Alignment.centerRight : Alignment.centerLeft,
+      child: Column(
+        //isSendByMe?
+        crossAxisAlignment: widget.isSendByMe
+            ? CrossAxisAlignment.end
+            : CrossAxisAlignment.start,
+        children: [
 
-      child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 24,vertical: 8),
-          decoration: BoxDecoration(
-              gradient: LinearGradient(
-                  colors: isSendByMe ?
-                  [Colors.yellow,
-                    Colors.pinkAccent]:
-                  [Colors.blue,
-                    Colors.blueAccent]
-              ),
-              borderRadius: isSendByMe?
-              BorderRadius.only(
-                  topLeft: Radius.circular(23),
-                  topRight:Radius.circular(23) ,
-                  bottomLeft: Radius.circular(23)
+          Text(" ${widget.time
+              .toDate()
+              .hour} :" "${widget.time
+              .toDate()
+              .minute } ", style: TextStyle(color: Colors.black),),
+          Text("From: "+widget.sender, style: TextStyle(fontSize: 10),),
 
-              ) :
-              BorderRadius.only(
-                  topLeft: Radius.circular(23),
-                  topRight:Radius.circular(23) ,
-                  bottomLeft: Radius.circular(23)
+          Material(
+            borderRadius: widget.isSendByMe
+                ? BorderRadius.only(
+                topLeft: Radius.circular(30.0),
+                bottomLeft: Radius.circular(30.0),
+                bottomRight: Radius.circular(30.0))
+                : BorderRadius.only(
+              bottomLeft: Radius.circular(30.0),
+              bottomRight: Radius.circular(30.0),
+              topRight: Radius.circular(30.0),
+            ),
+            elevation: 5.0,
+            color: widget.isSendByMe ? Color(0xFFDCF8C6) : Colors.white,
+            child: Padding(
+              padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+              child: Column(
+                  children: [
+                    if(widget.type==0)  Container(
+                      // padding: EdgeInsets.all(40),
+                        height: 150,
+                        width: 130,
+                        child: Image.network(widget.message)),
 
+                    if(widget.type==1)  Text(widget.message),
+                    if(widget.type==2)
+
+                      Stack(
+                        children: [
+                          Container(
+                            height: 150,
+                            width: 150,
+
+
+                            // padding: EdgeInsets.all(0),
+
+                            child:  FutureBuilder(
+                                future: _initializeVideoPlayerFuture,
+                                builder: (context,snapshot) {
+                                  if (snapshot.connectionState == ConnectionState.done) {
+                                    print("okokok");
+                                    return Center(
+
+                                      child: AspectRatio(
+
+                                        aspectRatio:1,
+                                        child: VideoPlayer(_controller),
+                                      ),
+                                    );
+                                  } else {
+                                    return Center(
+                                      child: CircularProgressIndicator(),
+                                    );
+                                  }
+                                }
+                            ),
+
+
+
+
+                          ),
+                          Container(
+                            // padding: EdgeInsets.all(2),
+                            margin: EdgeInsets.only(right: 100),
+                            child: FloatingActionButton(
+                              backgroundColor: Color(0x00000000),
+                              elevation: 50,
+                              onPressed: () {
+                                // Wrap the play or pause in a call to `setState`. This ensures the
+                                // correct icon is shown.
+                                setState(() {
+                                  // If the video is playing, pause it.
+                                  if (_controller.value.isPlaying) {
+                                    _controller.pause();
+                                  } else {
+                                    // If the video is paused, play it.
+                                    _controller.play();
+                                  }
+                                });
+                              },
+                              // Display the correct icon depending on the state of the player.
+                              child: Icon(
+                                _controller.value.isPlaying ? Icons.pause : Icons.play_arrow,
+                                color: Colors.transparent,
+                              ),
+                            ),
+                          )
+
+                        ],
+                      ),
+
+
+
+
+                  ]
               )
-          ),
-
-          child:
-
-          Column(
-            children: [
-              Text(message),
-              Text("From: "+sender, style: TextStyle(fontSize: 10),)
-            ],
+            ),
           )
+        ],
       ),
     );
-
   }
-
-
 }
 

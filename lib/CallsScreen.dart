@@ -1,3 +1,5 @@
+import 'package:flutter/cupertino.dart';
+
 import 'Newsbloc.dart';
 import 'newsmodel.dart';
 import 'package:flutter/material.dart';
@@ -171,7 +173,19 @@ class NewsState extends State<News> {
   }
   });
   } else
-  return Center(child: CircularProgressIndicator());
+  return     Center(
+    //   CircularProgressIndicator();
+
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          CircularProgressIndicator(),
+          Text("Select Category ")
+        ],
+      )
+
+
+  );
   },
   );
 }

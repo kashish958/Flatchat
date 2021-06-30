@@ -58,34 +58,45 @@ Stream   chatMessagesStream;
                         ),
                         ListTile(
                           leading: CircleAvatar(
+radius: 28,
 
-                            // foregroundColor:Color(0xff075E54),
-                            // backgroundColor:Colors.grey ,
                             backgroundImage: NetworkImage(
                                snapshot.data.docs[index]["URL"],
-                                //fit: BoxFit.fitWidth,
-//height: 70,
-                                //width: 50,
+
+
                               )
 
                           ),
                           title:
                            Row(
                              children: [
-                               TextButton(onPressed: (){
-                                      setState(() {
-                                        Searchstate().createchatroomandtalk(context,
-                                            userName: snapshot.data.docs[index]["field1"]
-                                        );
-                                      });
-                                    }, child: Text(snapshot.data.docs[index]["field1"] ,
-                                      style: TextStyle(fontWeight: FontWeight.bold  ,color: Colors.black,fontSize: 18) ,  ) ),
 
-                               Text("                                        ${snapshot.data.docs[index]["lasttime"].toDate().hour} :"
-                                   "${snapshot.data.docs[index]["lasttime"].toDate().minute }" ,style : TextStyle(color:Colors.grey,fontSize: 14))
+                               //  margin: EdgeInsets.only(right: ),
+                                 GestureDetector(
+                                   onTap: (){
+
+                                       setState(() {
+                                         Searchstate().createchatroomandtalk(context,
+                                             userName: snapshot.data.docs[index]["field1"]
+                                         );
+                                       });
+
+                                   }
+                                   ,child: Text(snapshot.data.docs[index]["field1"] ,
+                                          style: TextStyle(fontWeight: FontWeight.bold  ,color: Colors.black,fontSize: 18) ,  ),
+                                 ) ,
+
+Spacer(),
+                               Container(
+                                 margin: EdgeInsets.only(left: 145),
+                                 child: Text(" ${snapshot.data.docs[index]["lasttime"].toDate().hour} :"
+                                     "${snapshot.data.docs[index]["lasttime"].toDate().minute }" ,style : TextStyle(color:Colors.grey,fontSize: 14)),
+                               )
                              ],
                            ),
-                         subtitle: Text(snapshot.data.docs[index]["lastmsg"]),     //  Text("04:30" ,style : TextStyle(color:Colors.grey,fontSize: 14)),
+                         subtitle: Container(
+                             padding: EdgeInsets.only(left: 7),
+                             child: Text(snapshot.data.docs[index]["lastmsg"])),
 
                         ),
 
@@ -96,11 +107,10 @@ Stream   chatMessagesStream;
 
 
                   })
-              : CircularProgressIndicator();
+              :
+          CircularProgressIndicator();
         });
   }
-
-
 
   @override
   void initState() {
@@ -120,15 +130,10 @@ Stream   chatMessagesStream;
     //  debugShowCheckedModeBanner: false,
         return Scaffold(
 
-
-
             body:
 
             showlist(),
-//show
 
-
-        //)
     );
   }
 }

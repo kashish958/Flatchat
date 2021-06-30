@@ -28,6 +28,8 @@ class GcState extends State<Gc> {
 
   List<String> temp = [];
 
+  bool flag = false;
+
   Widget showlist() {
     return StreamBuilder(
         stream: FirebaseFirestore.instance.collection("Userss").snapshots(),
@@ -37,11 +39,7 @@ class GcState extends State<Gc> {
                   itemCount: snapshot.data.docs.length,
                   //   shrinkWrap: true,
                   itemBuilder: (context, index) {
-                    return // Text(snapshot.data.docs[index]["chatroomid"].toString());
-
-//
-//
-
+                    return
 
                     Column(
 
@@ -68,9 +66,9 @@ class GcState extends State<Gc> {
                             title: Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children:<Widget>[
-                                Text(snapshot.data.docs[index]["field1"]
+                                Text(snapshot.data.docs[index]["field1" ]
                                   ,
-                                    style: TextStyle(fontWeight: FontWeight.bold  ,color: Colors.black,fontSize: 18) ,  ),
+                                    style: TextStyle(fontWeight: FontWeight.bold  ,color:temp.contains(snapshot.data.docs[index]["field1"])?Colors.green: Colors.black,fontSize: 18) ,  ),
 
 
 
@@ -88,15 +86,24 @@ class GcState extends State<Gc> {
                               onPressed: () {
                                 setState(
                                         () {
-                                  // Searchstate().createchatroomandtalk( context,
-                                  //     userName:snapshot.data.docs[index]["field1"]
 
                                   temp.add(snapshot.data.docs[index]["field1"]);
+
                                 }
                                 );
                               },
+                              onLongPress: (){
+                                print("pppp");
+                                setState(() {
+                                  temp.remove(snapshot.data.docs[index]["field1"]);
+
+                                });
+                                print("ff");
+                              },
                               child: Icon(Icons.add),
                             ),
+
+
                           ),
                         ],
                   //    ),
@@ -153,9 +160,18 @@ class GcState extends State<Gc> {
       Map<String, dynamic> groupRoomMap = {
         "users": FieldValue.arrayUnion(temp),
         "grouproomid": groupRoomId,
-        "URL" :iurl
+        "URL" :iurl,
+      // FirebaseFirestore.instance.collection('Userss').doc(widget.userName).update({
+      'lastmsg': "",
+      "lasttime": DateTime.now(),
+      // "name": widget.name,
+      // });
+
 
       };
+
+
+
       print("ayaya");
 
   await   d.creategroup(groupRoomId, groupRoomMap);
@@ -259,6 +275,7 @@ addimg(imgfile).then((value) {
         home: Scaffold(
       appBar: AppBar(
         title: Text("Select Members"),
+
         backgroundColor:Color(0xff075E54),
       ),
       floatingActionButton: FloatingActionButton(

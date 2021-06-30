@@ -36,7 +36,7 @@ getuserbyemail(String email) async{
     print("lk");
     print(photo);
     Map <String,dynamic> data = {
-      "field1" :UserNameCtrl,"field2" :UserEmailCtrl ,"URL" :photo , "lastmsg" :"huhuh",
+      "field1" :UserNameCtrl,"field2" :UserEmailCtrl ,"URL" :photo , "lastmsg" :"",
       "lasttime":DateTime.now()
 
     };

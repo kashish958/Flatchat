@@ -37,11 +37,12 @@ class HomeState extends State<Home>
     super.initState();
 
     _tabController = TabController(vsync: this, initialIndex: 1, length: 3);
-    nb.getNews("entertainment");
+   // nb.getNews("entertainment");
   }
 
   @override
   Widget build(BuildContext context) {
+    //debugShowCheckedModeBanner: false,
 
     return Scaffold(
       //debugShowCheckedModeBanner: false,
@@ -50,7 +51,7 @@ class HomeState extends State<Home>
         appBar: AppBar(
 
           backgroundColor: Color(0xff075E54),
-          title: Text("FlatChat"),
+          title: Text("WhatsApp"),
 
           elevation: 0.7,
           bottom: new TabBar(controller: _tabController,
@@ -59,7 +60,7 @@ class HomeState extends State<Home>
              // new Tab(icon:new Icon(Icons.camera_alt) ,),
               new Tab(text:"CHATS",),
               new Tab(text:"GROUPS" ,),
-              new Tab(text:"NEWS" ,),
+              new Tab(text:"CALLS" ,),
 
 
 
@@ -84,7 +85,7 @@ class HomeState extends State<Home>
                       );
 
                     },
-                    child: Icon(Icons.exit_to_app))
+                    child: Icon(Icons.more_vert))
           ],
         ),
         body: TabBarView(
@@ -135,165 +136,4 @@ class HomeState extends State<Home>
 
 
 
-
-
-// class Home extends StatefulWidget {
-//   @override
-//   State<StatefulWidget> createState() {
-//     return Homestate();
-//   }
-// }
-//
-// class Homestate extends State<Home> {
-//   Authenti a = new Authenti();
-//   DB d = new DB();
-//
-//
-//
-//
-//   Widget showlist() {
-//    return StreamBuilder(
-//         stream: FirebaseFirestore.instance.collection("Userss").snapshots(),
-//         builder: (context, snapshot) {
-//           return snapshot.hasData
-//               ? ListView.builder(
-//                   itemCount: snapshot.data.docs.length,
-//                   //   shrinkWrap: true,
-//                   itemBuilder: (context, index) {
-//
-//                     return // Text(snapshot.data.docs[index]["chatroomid"].toString());
-//
-//                         Card(
-//                           elevation: 10,
-//                           margin: EdgeInsets.symmetric(vertical: 10, ),
-//
-//                           child: ExpansionTile(
-//                           //  child : SizedBox(height: 20,),
-//                               title : Text(snapshot.data.docs[index]["field1"]),
-//
-//                             leading:
-//                                Image.network(
-//                                snapshot.data.docs[index]["URL"],
-//                                 fit: BoxFit.fitWidth,
-// height: 70,
-//                                 width: 50,
-//                               ),
-//
-//                          // leading :Text(snapshot.data.docs[index]["field2"]),
-//
-//                             children : [
-//
-//
-//                                           RaisedButton(
-//                                             onPressed:() {
-// setState(() {
-//   Searchstate().createchatroomandtalk( context,
-//       userName:snapshot.data.docs[index]["field1"]
-//   );
-// }
-// );
-//
-//
-//                                             },
-//                                             child: Icon(Icons.message),
-//                                           ),
-//
-//                             ]
-//                           ),
-//
-//
-//
-//
-//
-//                         );
-//                   })
-//               : CircularProgressIndicator();
-//         });
-//   }
-//
-//
-//   @override
-//   void initState() {
-//     getUserInfo();
-//
-//     super.initState();
-//   }
-//
-//   getUserInfo() async {
-//     Constants.myName = await HelperFunctions.getUserNameSharedPreference();
-//
-//
-//   }
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return MaterialApp(
-//         home: Scaffold(
-//             appBar: AppBar(
-//               title: Text("Your Contacts"),
-//               backgroundColor: Colors.black,
-//               actions: [
-//                 GestureDetector(
-//                     onTap: () {
-//                       a.signout();
-//                       Navigator.pushReplacement(context,
-//                           MaterialPageRoute(builder: (context) => Login() )
-//                       );
-//
-//                     },
-//                     child: Icon(Icons.exit_to_app))
-//               ],
-//             ),
-//
-//             floatingActionButton: Container(
-//
-//               margin: EdgeInsets.only(top: 390),
-//               child: Column(
-//
-//
-//
-//                 children: [
-//
-//                    FloatingActionButton(
-//
-//                     onPressed:(){
-//                         Navigator.push(context,
-//                           MaterialPageRoute(builder: (context) => GroupList()));
-//
-//                     }, child: Row(
-//                     children: [
-//                       Icon(Icons.arrow_forward_ios_rounded,size: 20, ),
-//                       Text("Grps")
-//                     ],
-//                   ),
-//                   ),
-//
-// SizedBox(height: 100,),
-//                   FloatingActionButton(
-//                     child: Icon(Icons.group_add),
-//                     onPressed: () {
-//                       Navigator.push(context,
-//                           MaterialPageRoute(builder: (context) => Gc()));
-//                     },
-//                   ),
-//
-//
-//                   FloatingActionButton(
-//                     child: Icon(Icons.search),
-//                     onPressed: () {
-//                       Navigator.push(context,
-//                           MaterialPageRoute(builder: (context) => Searchscreen()));
-//                     },
-//                   ),
-//                 ],
-//               ),
-//             ),
-//             body: showlist(),
-//
-//
-//
-//         )
-//     );
-//   }
-// }
 

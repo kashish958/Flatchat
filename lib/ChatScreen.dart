@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flatchat/Auth.dart';
 import 'package:flatchat/Login.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'CameraScreen.dart';
 import 'ChatScreen.dart';
 import 'CallsScreen.dart';
@@ -87,15 +88,20 @@ radius: 28,
                                  ) ,
 
 Spacer(),
+
                                Container(
                                  margin: EdgeInsets.only(left: 145),
-                                 child: Text(" ${snapshot.data.docs[index]["lasttime"].toDate().hour} :"
-                                     "${snapshot.data.docs[index]["lasttime"].toDate().minute }" ,style : TextStyle(color:Colors.grey,fontSize: 14)),
+                                 child:   Text(snapshot.data.docs[index]["lasttime"],
+                                  // '${DateFormat.Hm().format(snapshot.data.docs[index]["lasttime"].toDate())}',
+                                   style: TextStyle(color: Colors.black38 , fontSize: 14),
+                                 ),
+                                 // child: Text(" ${snapshot.data.docs[index]["lasttime"].toDate().hour} :"
+                                 //     "${snapshot.data.docs[index]["lasttime"].toDate().minute }" ,style : TextStyle(color:Colors.grey,fontSize: 14)),
                                )
                              ],
                            ),
                          subtitle: Container(
-                             padding: EdgeInsets.only(left: 7),
+                             padding: EdgeInsets.only(left: 1),
                              child: Text(snapshot.data.docs[index]["lastmsg"])),
 
                         ),

@@ -1,6 +1,7 @@
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:io';
+import 'package:intl/intl.dart';
 
 import 'package:image_picker/image_picker.dart';
 import 'Auth.dart';
@@ -37,9 +38,10 @@ getuserbyemail(String email) async{
     print(photo);
     Map <String,dynamic> data = {
       "field1" :UserNameCtrl,"field2" :UserEmailCtrl ,"URL" :photo , "lastmsg" :"",
-      "lasttime":DateTime.now()
+      "lasttime":DateFormat.Hm().format(DateTime.now())
 
-    };
+
+  };
     FirebaseFirestore.instance.collection("Userss").doc(UserNameCtrl).set(data);
 
   }

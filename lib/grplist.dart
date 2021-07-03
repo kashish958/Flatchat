@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flatchat/gc.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import 'constants.dart';
 import 'groupkibaat.dart';
@@ -48,9 +49,7 @@ Widget showgList(){
                             backgroundColor:Colors.grey ,
                             backgroundImage: NetworkImage(
                               snapshot.data.docs[index]["URL"],
-                              //fit: BoxFit.fitWidth,
-//height: 70,
-                              //width: 50,
+
                             )
 
                         ),
@@ -58,9 +57,6 @@ Widget showgList(){
                               title :  Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-
-
-
 
                                   GestureDetector(onTap: (){
                                   print("oko");
@@ -74,8 +70,10 @@ Widget showgList(){
                                     style: TextStyle(fontWeight: FontWeight.bold  ,color: Colors.black,fontSize: 18) ,  ) ),
                                   Container(
                                     margin: EdgeInsets.only(left: 145),
-                                    child: Text(" ${snapshot.data.docs[index]["lasttime"].toDate().hour} :"
-                                        "${snapshot.data.docs[index]["lasttime"].toDate().minute }" ,style : TextStyle(color:Colors.grey,fontSize: 14)),
+                                    child:   Text( snapshot.data.docs[index]["lasttime"],
+                                   //   '${DateFormat.Hm().format(snapshot.data.docs[index]["lasttime"].toDate())}',
+                                      style: TextStyle(color: Colors.black38 , fontSize: 14),
+                                    ),
                                   )
                                 ],
                               ),
@@ -85,55 +83,9 @@ Widget showgList(){
                       ),
 
 
-
                     ],
                   );
 
-
-
-
-                // Card(
-                //   elevation: 10,
-                //   margin: EdgeInsets.symmetric(vertical: 10, ),
-                //
-                //   child: ExpansionTile(
-                //     //  child : SizedBox(height: 20,),
-                //       title : Text(snapshot.data.docs[index]["grouproomid"]),
-                //
-                //
-                //
-                //
-                //       // leading :Text(snapshot.data.docs[index]["field2"]),
-                //
-                //       children : [
-                //
-                //
-                //         RaisedButton(
-                //           onPressed:() {
-                //            //  setState(() {
-                //            //  // GcState().  creategroupandtalk(context,userName: Constants.myName) ;           //createchatroomandtalk( context,
-                //            //      // userName:snapshot.data.docs[index]["field1"]
-                //            //
-                //            // }
-                //
-                //            //);
-                //
-                //             Navigator.pushReplacement(context,
-                //                 MaterialPageRoute(builder: (context) => Groupkibaat(snapshot.data.docs[index]["grouproomid"])));
-                //
-                //
-                //           },
-                //           child: Icon(Icons.message),
-                //         ),
-                //
-                //       ]
-                //   ),
-                //
-                //
-                //
-                //
-                //
-                // );
               }):CircularProgressIndicator();
 
         }

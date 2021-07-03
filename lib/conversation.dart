@@ -15,6 +15,7 @@ import 'chatroom.dart';
 import 'db.dart';
 import 'package:path/path.dart';
 import 'dart:async';
+import 'package:intl/intl.dart';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -211,7 +212,7 @@ class Conversationstate extends State<Conversation> {
     Map<String, dynamic> messageMap = {
       "message": msgg,
       "sendby": Constants.myName,
-      "time": DateTime.now(),
+      "time": DateFormat.Hm().format(DateTime.now()),
       "type": i
     };
     d.addConversationMessages(widget.chatRoomId, messageMap);
@@ -220,23 +221,13 @@ class Conversationstate extends State<Conversation> {
         .doc(widget.userName)
         .update({
       'lastmsg': messagecontroller.text,
-      "lasttime": DateTime.now(),
+      "lasttime": DateFormat.Hm().format(DateTime.now()),
+
       // "name": widget.name,
     });
     messagecontroller.clear();
   }
 
-  // getlast() {
-  //   print("fetchiii");
-  //
-  //     Map<String, dynamic> lastdata = {
-  //       "lastmsg": messagecontroller.text,
-  //       "lasttime": DateTime.now()
-  //     };
-  //     d.updatelastmsgtime(widget.chatRoomId, lastdata);
-  //  //  messagecontroller.clear();
-  //
-  // }
 
   Widget bottomSheet(BuildContext context) {
     return Container(
@@ -625,16 +616,35 @@ class Conversationstate extends State<Conversation> {
                           child: Row(
                             children: [
                               Container(
-                                height: 40,
-                                width: 30,
+                                height: 50,
+                                width: 35,
                                 padding: EdgeInsets.all(12),
                                 child: Icon(
                                   Icons.attach_file,
                                 ),
+
                               ),
+
                             ],
                           ),
                         ),
+
+    GestureDetector(
+      onTap: () {
+        chooseimg(ImageSource.camera).then((value) => {
+          addimg(value).then((value) {
+            sendimg(0, value);
+
+            ChatimageList();
+          })
+        });
+        //Navigator.of(context).pop();
+      },
+                        child: Icon(
+                            Icons.camera_alt,
+                          ),
+                        ),
+
                         //Spacer(),
 
                         FlatButton(
@@ -679,7 +689,7 @@ class MessageTile extends StatefulWidget {
   final String message;
   final int type;
   final bool isSendByMe;
-  final Timestamp time;
+  final String time;
 
   MessageTile(this.message, this.isSendByMe, this.time, this.type);
 
@@ -733,25 +743,23 @@ class _MessageTileState extends State<MessageTile> {
       alignment:
           widget.isSendByMe ? Alignment.centerRight : Alignment.centerLeft,
       child: Column(
+
         //isSendByMe?
         crossAxisAlignment: widget.isSendByMe
             ? CrossAxisAlignment.end
             : CrossAxisAlignment.start,
         children: [
-          Text(
-            " ${widget.time.toDate().hour} :" "${widget.time.toDate().minute} ",
-            style: TextStyle(color: Colors.black),
-          ),
+
           Material(
             borderRadius: widget.isSendByMe
                 ? BorderRadius.only(
-                    topLeft: Radius.circular(30.0),
-                    bottomLeft: Radius.circular(30.0),
-                    bottomRight: Radius.circular(30.0))
+                    topLeft: Radius.circular(10.0),
+                    bottomLeft: Radius.circular(10.0),
+                    bottomRight: Radius.circular(10.0))
                 : BorderRadius.only(
-                    bottomLeft: Radius.circular(30.0),
-                    bottomRight: Radius.circular(30.0),
-                    topRight: Radius.circular(30.0),
+                    bottomLeft: Radius.circular(10.0),
+                    bottomRight: Radius.circular(10.0),
+                    topRight: Radius.circular(10.0),
                   ),
             elevation: 5.0,
             color: widget.isSendByMe ? Color(0xFFDCF8C6) : Colors.white,
@@ -759,20 +767,78 @@ class _MessageTileState extends State<MessageTile> {
                 padding: EdgeInsets.symmetric(vertical: 11.0, horizontal: 13.0),
                 child: Column(children: [
                   if (widget.type == 0)
-                    Container(
-                        // padding: EdgeInsets.all(40),
-                        height: 150,
-                        width: 130,
-                        child: Image.network(
-                          widget.message,
-                          fit: BoxFit.fill,
-                        )),
-                  if (widget.type == 1) Text(widget.message),
+
+                    Stack(
+                      children: <Widget>[
+
+                          Container(
+                             //padding: EdgeInsets.all(40),
+                              height: 170,
+                              width: 180,
+                              padding: EdgeInsets.only(right: 39),
+                              child: Image.network(
+                                widget.message,
+                                fit: BoxFit.fill,
+                              ))
+                        ,
+                        Positioned(
+                          top: 160,
+                          bottom: 0.0,
+
+                          right: 0.0,
+                          child: Row(
+                            children: <Widget>[
+
+
+                              Text(widget.time,
+                               // '${DateFormat.Hm().format(widget.time.toDate())}',
+                                style: TextStyle(color: Colors.black38 , fontSize: 10),
+                              ),
+
+                            //  SizedBox(height: 8.0),
+
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
+
+
+
+
+                  if (widget.type == 1)
+
+                    Stack(
+                      children: <Widget>[
+                        Padding(
+                          padding: EdgeInsets.only(right: 48.0),
+                          child: Text(widget.message),
+                        ),
+                        Positioned(
+                          top: 7,
+                          bottom: 0.0,
+                          right: 0.0,
+                          child: Row(
+                            children: <Widget>[
+    Text(widget.time,
+   // '${DateFormat.Hm().format(widget.time.toDate())}',
+            style: TextStyle(color: Colors.black38 , fontSize: 10),
+        ),
+
+                              SizedBox(width: 3.0),
+
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
+
+
                   if (widget.type == 2)
                     Stack(
                       children: [
                         Container(
-                          height: 150,
+                          height: 170,
                           width: 150,
 
                           // padding: EdgeInsets.all(0),
@@ -798,6 +864,7 @@ class _MessageTileState extends State<MessageTile> {
                         ),
                         Container(
                           // padding: EdgeInsets.all(2),
+                          padding: EdgeInsets.only(right: 30),
                           margin: EdgeInsets.only(right: 100),
                           child: FloatingActionButton(
                             backgroundColor: Color(0x00000000),
@@ -823,10 +890,27 @@ class _MessageTileState extends State<MessageTile> {
                               color: Colors.transparent,
                             ),
                           ),
+                        ),
+                        Positioned(
+                          top: 150,
+                          bottom: 0.0,
+
+                          right: 0.0,
+                          child: Row(
+                            children: <Widget>[
+                              Text(widget.time,
+                                //'${DateFormat.Hm().format(widget.time.toDate())}',
+                                style: TextStyle(color: Colors.black38 , fontSize: 10),
+                              ),
+
+                            ],
+                          ),
                         )
                       ],
                     ),
-                ])),
+                ]
+                )
+            ),
           )
         ],
       ),

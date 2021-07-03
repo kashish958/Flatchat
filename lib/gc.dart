@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'Searchsreen.dart';
 import 'constants.dart';
 import 'db.dart';
@@ -82,8 +83,10 @@ class GcState extends State<Gc> {
 
                             // leading :Text(snapshot.data.docs[index]["field2"]),
 
-                            trailing: RaisedButton(
-                              onPressed: () {
+                            trailing: GestureDetector(
+                              //color: Colors.white,
+                              //elevation: 350,
+                              onTap: () {
                                 setState(
                                         () {
 
@@ -92,7 +95,7 @@ class GcState extends State<Gc> {
                                 }
                                 );
                               },
-                              onLongPress: (){
+                              onDoubleTap: (){
                                 print("pppp");
                                 setState(() {
                                   temp.remove(snapshot.data.docs[index]["field1"]);
@@ -100,7 +103,7 @@ class GcState extends State<Gc> {
                                 });
                                 print("ff");
                               },
-                              child: Icon(Icons.add),
+                              child: Icon(Icons.add,color: Colors.white,),
                             ),
 
 
@@ -163,8 +166,9 @@ class GcState extends State<Gc> {
         "URL" :iurl,
       // FirebaseFirestore.instance.collection('Userss').doc(widget.userName).update({
       'lastmsg': "",
-      "lasttime": DateTime.now(),
-      // "name": widget.name,
+        "lasttime":DateFormat.Hm().format(DateTime.now())
+
+        // "name": widget.name,
       // });
 
 

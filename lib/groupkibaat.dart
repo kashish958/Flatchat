@@ -10,6 +10,7 @@ import 'package:flatchat/constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'Auth.dart';
 import 'db.dart';
 import 'package:path/path.dart';
@@ -52,6 +53,7 @@ class GroupkibaatState extends State<Groupkibaat> {
       stream: chatMessagesStream,
       builder: (context, snapshot) {
         return snapshot.hasData
+
             ? ListView.builder(
                 itemCount: snapshot.data.docs.length,
                 itemBuilder: (context, index) {
@@ -373,14 +375,14 @@ class GroupkibaatState extends State<Groupkibaat> {
       Map<String, dynamic> messageMap = {
         "message": msgg,
         "sendby": Constants.myName,
-        "time": DateTime.now(),
+        "time": DateFormat.Hm().format(DateTime.now()),
         "type":i
 
       };
       d.addgroupmsg(widget.chatRoomId, messageMap);
       FirebaseFirestore.instance.collection('GroupRoom').doc(widget.chatRoomId).update({
         'lastmsg': messagecontroller.text,
-        "lasttime": DateTime.now(),
+        "lasttime":DateFormat.Hm().format(DateTime.now())
         // "name": widget.name,
       });
       messagecontroller.clear();
@@ -581,6 +583,23 @@ padding: EdgeInsets.only(right: 15),
                             ],
                           ),
                         ),
+
+                        GestureDetector(
+                          onTap: () {
+                            chooseimg(ImageSource.camera).then((value) => {
+                              addimg(value).then((value) {
+                                sendimg(0, value);
+
+                             //   ChatimageList();
+                              })
+                            });
+                            //Navigator.of(context).pop();
+                          },
+                          child: Icon(
+                            Icons.camera_alt,
+                          ),
+                        ),
+
                         //Spacer(),
 
                         FlatButton(
@@ -632,7 +651,7 @@ class MessageTile extends StatefulWidget {
   final String message;
   final bool isSendByMe;
   String sender;
-  final Timestamp time;
+  final String time;
   final int type;
 
 
@@ -684,108 +703,166 @@ class _MessageTileState extends State<MessageTile> {
             : CrossAxisAlignment.start,
         children: [
 
-          Text(" ${widget.time
-              .toDate()
-              .hour} :" "${widget.time
-              .toDate()
-              .minute } ", style: TextStyle(color: Colors.black),),
           Text("From: "+widget.sender, style: TextStyle(fontSize: 10),),
 
           Material(
             borderRadius: widget.isSendByMe
                 ? BorderRadius.only(
-                topLeft: Radius.circular(30.0),
-                bottomLeft: Radius.circular(30.0),
-                bottomRight: Radius.circular(30.0))
+                topLeft: Radius.circular(10.0),
+                bottomLeft: Radius.circular(10.0),
+                bottomRight: Radius.circular(10.0))
                 : BorderRadius.only(
-              bottomLeft: Radius.circular(30.0),
-              bottomRight: Radius.circular(30.0),
-              topRight: Radius.circular(30.0),
+              bottomLeft: Radius.circular(10.0),
+              bottomRight: Radius.circular(10.0),
+              topRight: Radius.circular(10.0),
             ),
             elevation: 5.0,
             color: widget.isSendByMe ? Color(0xFFDCF8C6) : Colors.white,
             child: Padding(
               padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
-              child: Column(
-                  children: [
-                    if(widget.type==0)  Container(
-                      // padding: EdgeInsets.all(40),
-                        height: 150,
-                        width: 130,
-                        child: Image.network(widget.message)),
+              child: Column(children: [
+                if (widget.type == 0)
 
-                    if(widget.type==1)  Text(widget.message),
-                    if(widget.type==2)
+                  Stack(
+                    children: <Widget>[
 
-                      Stack(
-                        children: [
-                          Container(
-                            height: 150,
-                            width: 150,
+                      Container(
+                        //padding: EdgeInsets.all(40),
+                          height: 170,
+                          width: 180,
+                          padding: EdgeInsets.only(right: 39),
+                          child: Image.network(
+                            widget.message,
+                            fit: BoxFit.fill,
+                          ))
+                      ,
+                      Positioned(
+                        top: 160,
+                        bottom: 0.0,
 
-
-                            // padding: EdgeInsets.all(0),
-
-                            child:  FutureBuilder(
-                                future: _initializeVideoPlayerFuture,
-                                builder: (context,snapshot) {
-                                  if (snapshot.connectionState == ConnectionState.done) {
-                                    print("okokok");
-                                    return Center(
-
-                                      child: AspectRatio(
-
-                                        aspectRatio:1,
-                                        child: VideoPlayer(_controller),
-                                      ),
-                                    );
-                                  } else {
-                                    return Center(
-                                      child: CircularProgressIndicator(),
-                                    );
-                                  }
-                                }
+                        right: 0.0,
+                        child: Row(
+                          children: <Widget>[
+                            Text(widget.time,
+                              //'${DateFormat.Hm().format(widget.time.toDate())}',
+                              style: TextStyle(color: Colors.black38 , fontSize: 10),
                             ),
 
+                            //  SizedBox(height: 8.0),
+
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
 
 
 
-                          ),
-                          Container(
-                            // padding: EdgeInsets.all(2),
-                            margin: EdgeInsets.only(right: 100),
-                            child: FloatingActionButton(
-                              backgroundColor: Color(0x00000000),
-                              elevation: 50,
-                              onPressed: () {
-                                // Wrap the play or pause in a call to `setState`. This ensures the
-                                // correct icon is shown.
-                                setState(() {
-                                  // If the video is playing, pause it.
-                                  if (_controller.value.isPlaying) {
-                                    _controller.pause();
-                                  } else {
-                                    // If the video is paused, play it.
-                                    _controller.play();
-                                  }
-                                });
-                              },
-                              // Display the correct icon depending on the state of the player.
-                              child: Icon(
-                                _controller.value.isPlaying ? Icons.pause : Icons.play_arrow,
-                                color: Colors.transparent,
-                              ),
-                            ),
-                          )
 
-                        ],
+                if (widget.type == 1)
+
+                  Stack(
+                    children: <Widget>[
+                      Padding(
+                        padding: EdgeInsets.only(right: 48.0),
+                        child: Text(widget.message),
                       ),
+                      Positioned(
+                        top: 7,
+                        bottom: 0.0,
+                        right: 0.0,
+                        child: Row(
+                          children: <Widget>[
+                            Text(widget.time,
+                              //'${DateFormat.Hm().format(widget.time.toDate())}',
+                              style: TextStyle(color: Colors.black38 , fontSize: 10),
+                            ),
+                            SizedBox(width: 3.0),
+
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
 
 
+                if (widget.type == 2)
+                  Stack(
+                    children: [
+                      Container(
+                        height: 170,
+                        width: 150,
 
+                        // padding: EdgeInsets.all(0),
 
-                  ]
-              )
+                        child: FutureBuilder(
+                            future: _initializeVideoPlayerFuture,
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.done) {
+                                print("okokok");
+                                return Center(
+                                  child: AspectRatio(
+                                    aspectRatio: 1,
+                                    child: VideoPlayer(_controller),
+                                  ),
+                                );
+                              } else {
+                                return Center(
+                                  child: CircularProgressIndicator(),
+                                );
+                              }
+                            }),
+                      ),
+                      Container(
+                        // padding: EdgeInsets.all(2),
+                        padding: EdgeInsets.only(right: 30),
+                        margin: EdgeInsets.only(right: 100),
+                        child: FloatingActionButton(
+                          backgroundColor: Color(0x00000000),
+                          elevation: 50,
+                          onPressed: () {
+                            // Wrap the play or pause in a call to `setState`. This ensures the
+                            // correct icon is shown.
+                            setState(() {
+                              // If the video is playing, pause it.
+                              if (_controller.value.isPlaying) {
+                                _controller.pause();
+                              } else {
+                                // If the video is paused, play it.
+                                _controller.play();
+                              }
+                            });
+                          },
+                          // Display the correct icon depending on the state of the player.
+                          child: Icon(
+                            _controller.value.isPlaying
+                                ? Icons.pause
+                                : Icons.play_arrow,
+                            color: Colors.transparent,
+                          ),
+                        ),
+                      ),
+                      Positioned(
+                        top: 150,
+                        bottom: 0.0,
+
+                        right: 0.0,
+                        child: Row(
+                          children: <Widget>[
+                            Text(widget.time,
+                              //'${DateFormat.Hm().format(widget.time.toDate())}',
+                              style: TextStyle(color: Colors.black38 , fontSize: 10),
+                            ),
+
+                            //  SizedBox(height: 8.0),
+
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+              ])
             ),
           )
         ],
